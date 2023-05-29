@@ -195,29 +195,38 @@ class _EachdayState extends State<Eachday> {
                       child: Column(
 
                         children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                    "${retrievedList[index][0]}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20
+                          InkWell(
+                            onLongPress: ()
+                          {
+                             setState(() {
+                               infoObject.removeData(oldList: retrievedList, index: index);
+                               retrievedData();
+                             });
+                          },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                      "${retrievedList[index][0]}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                    "₦${retrievedList[index][1]}",
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 20,
+                                  Text(
+                                      "₦${retrievedList[index][1]}",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 20,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           )
                         ],
@@ -264,7 +273,7 @@ class _EachdayState extends State<Eachday> {
             ],
           ),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async {
+            onPressed: () {
               infoObject.Store(
                   oldList: retrievedList,
                   title: Title.text,

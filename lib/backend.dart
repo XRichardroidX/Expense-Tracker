@@ -15,7 +15,6 @@ Future<void> saveList(List<List<dynamic>> infoList) async
 }
 
   Future<void> Store({required List<List<dynamic>> oldList, required String title, required int amount}) async {
-    print(oldList);
     final List<List<String>> newList = oldList.map((item) => item.map((dynamic element) => element.toString()).toList()).toList();
     newList.add([title, amount.toString()]);
     saveList(newList);
@@ -33,6 +32,12 @@ Future<void> saveList(List<List<dynamic>> infoList) async
   }
   return listString.map((item) => item.split(',')).toList();
 
+  }
+
+  void removeData({required List<List<dynamic>> oldList, required int index}){
+    final List<List<String>> newList = oldList.map((item) => item.map((dynamic element) => element.toString()).toList()).toList();
+    newList.removeAt(index);
+    saveList(newList);
   }
 
 }
