@@ -40,4 +40,12 @@ Future<void> saveList(List<List<dynamic>> infoList) async
     saveList(newList);
   }
 
+  double totalAmountPerDay(List<List<dynamic>> List, int listLength){
+    double sum = 0;
+    for(int i = 0; i < listLength; i++){
+      sum += double.parse(List[i][1]);
+    }
+  return sum;
+  }
+
 }

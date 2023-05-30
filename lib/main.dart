@@ -185,12 +185,12 @@ class _EachdayState extends State<Eachday> {
         alignment: Alignment.topCenter,
             children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(10, 60, 10, 0),
+                  margin: EdgeInsets.fromLTRB(10, 70, 10, 0),
                   child: ListView.builder(
                   itemCount: retrievedList.length,
                   itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
+                    margin: EdgeInsets.fromLTRB(10, 50, 10, 0),
                       width: MediaQuery.of(context).size.width,
                       child: Column(
 
@@ -221,7 +221,7 @@ class _EachdayState extends State<Eachday> {
                                   Text(
                                       "₦${retrievedList[index][1]}",
                                     style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.black,
                                       fontSize: 20,
                                     ),
                                   ),
@@ -236,7 +236,20 @@ class _EachdayState extends State<Eachday> {
               ),
                 ),
               Container(
-                margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                margin: EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                    "₦${
+                    infoObject.totalAmountPerDay(retrievedList, retrievedList.length)
+                    }",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(20, 50, 20, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
