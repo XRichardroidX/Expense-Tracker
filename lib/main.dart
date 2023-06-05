@@ -1,7 +1,34 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'backend.dart';
 
-dynamic main(){
+String formatDuration(Duration duration) {
+  // Calculate the number of days, hours, minutes, and seconds
+  int days = duration.inDays;
+  int hours = duration.inHours % 24;
+  int minutes = duration.inMinutes % 60;
+  int seconds = duration.inSeconds % 60;
+
+  // Format the duration as a string
+  String formattedDuration = '';
+  if (days > 0) {
+    formattedDuration += '$days day${days > 1 ? 's' : ''} ';
+  }
+  if (hours > 0) {
+    formattedDuration += '$hours hour${hours > 1 ? 's' : ''} ';
+  }
+  if (minutes > 0) {
+    formattedDuration += '$minutes minute${minutes > 1 ? 's' : ''} ';
+  }
+  if (seconds > 0) {
+    formattedDuration += '$seconds second${seconds > 1 ? 's' : ''} ';
+  }
+
+  return formattedDuration.trim();
+}
+
+
+void main(){
   runApp(const MaterialApp(
     home: HomePage(),
     debugShowCheckedModeBanner: false,
@@ -16,6 +43,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  List<String> retrievedList = [];
+  List<List<dynamic>> retrievedInnerList = [[]];
+  Database database = Database();
+
+    listsOfDates() async {
+    retrievedList = await database.getListOfDate();
+    setState((){});
+  }
+
+  String doNothing = '';
+
+  @override
+  void initState() {
+    setState(() {
+      listsOfDates();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,117 +69,95 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.grey,
           title: const Center(
-            child: Text('MCE + Spend')
+            child: Text('Cash Flow')
           ),
           elevation: 0,
         ),
-        body: Container(
+        body: ListView.builder(
+        itemCount: retrievedList.length,
+          itemBuilder: (BuildContext context, int index) {
+          return Container(
           color: Colors.white,
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: ()
-            {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> Eachday()));
+          child: GestureDetector(
+          onTap: () {
+            setState(() {
+            //Todo Something
+            });
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Eachday(selectedDateIndex: index)));
+          },
+            onLongPress: () async {
+              database.getIndex(index);
+              database.clearAll();
+            database.clearDateList(index);
+            setState(() {});
             },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                            left: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                          ),
-                          color: Colors.white,
-                        ),
-                        child: const Text("hewjnsdkn"),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: retrievedList[index] == '' ?
+            Stack()
+                :
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                          width: 5,
+                          color: Colors.black
                       ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                            right: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                          ),
-                          color: Colors.white,
-                        ),
-                        child: const Text("hkn"),
+                      left: BorderSide(
+                          width: 5,
+                          color: Colors.black
                       ),
-                    ],
+                    ),
+                    color: Colors.white,
                   ),
+                  child: Text('${retrievedList[index]}'),
                 ),
-              ),
-              GestureDetector(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10,  horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                            left: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                          ),
-                          color: Colors.white,
-                        ),
-                        child: const Text("hewjnsdkn"),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          width: 5,
+                          color: Colors.black
                       ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                            right: BorderSide(
-                                width: 5,
-                                color: Colors.black
-                            ),
-                          ),
-                          color: Colors.white,
-                        ),
-                        child: const Text("hewjnsdkn"),
+                      right: BorderSide(
+                          width: 5,
+                          color: Colors.black
                       ),
-                    ],
+                    ),
+                    color: Colors.white,
                   ),
+                  child: const Text("View"),
                 ),
-              )
-            ]
+              ],
+            ),
           ),
         ),
+         );
+        },
+        ),
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          DateTime date = DateTime.timestamp();
+          int _date = date.day;
+          database.saveListOfDates(_date);
+          Timer(Duration(microseconds: 2), () {
+            listsOfDates();
+          });
+          setState(() {});
+        }),
       ),
     );
   }
 }
 
 class Eachday extends StatefulWidget {
-
-   Eachday({Key? key}) : super(key: key);
+   final int selectedDateIndex;
+   Eachday({Key? key, required this.selectedDateIndex}) : super(key: key);
 
   @override
   State<Eachday> createState() => _EachdayState();
@@ -150,9 +174,9 @@ class _EachdayState extends State<Eachday> {
 
 
    void retrievedData() async {
-     setState(() async {
-       retrievedList = await infoObject.getList();
-     });
+       infoObject.getIndex(widget.selectedDateIndex);
+       retrievedList = await infoObject.getList(widget.selectedDateIndex);
+       setState(() {});
    }
 
    bool notDisplayed = true;
@@ -162,6 +186,7 @@ class _EachdayState extends State<Eachday> {
     // TODO: implement initState
      setState(() {
        retrievedData();
+
      });
     super.initState();
   }
@@ -203,6 +228,9 @@ class _EachdayState extends State<Eachday> {
                                retrievedData();
                              });
                           },
+                            onTap: (){
+                              setState(() {});
+                            },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
@@ -290,7 +318,7 @@ class _EachdayState extends State<Eachday> {
               infoObject.Store(
                   oldList: retrievedList,
                   title: Title.text,
-                  amount: int.parse(Amount.text)
+                  amount: int.parse(Amount.text),
               );
               retrievedData();
               Title.clear();
